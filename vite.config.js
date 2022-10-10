@@ -27,6 +27,7 @@ export default defineConfig({
             ext: '.gz',
         }),
     ],
+    // 别名设置
     resolve: {
         alias: [
             {
@@ -35,6 +36,33 @@ export default defineConfig({
             },
         ],
     },
+
+    server: {
+        port: 8080, // 端口号
+        host: true, // host设置为true才可以使用network的形式，以ip访问项目
+        open: true,  // 自动打开浏览器
+        https: false, // https模式
+        cors: true, // 跨域设置允许
+        proxy: {
+            '/api/': {
+                // target: 'https://ybp.getui.com/api/',
+                // target: 'http://pop.cc.test.plat.ge.cn/api/',
+                changeOrigin: true, // 允许跨域
+                rewrite: p => p.replace(/^\/api/, ''),
+            },
+        },
+    },
+    build: {
+        reportCompressedSize: false,
+         // 消除打包大小超过500kb警告
+        chunkSizeWarningLimit: 2000,
+        terserOptions: {
+            compress: {
+                drop_console: true,
+                drop_debugger: true,
+            },
+        },
+    },
     css: {
         // css预处理器
         preprocessorOptions: {
@@ -42,28 +70,6 @@ export default defineConfig({
                 javascriptEnabled: true,
                 charset: false,
                 additionalData: '@import "./src/styles/var.less";', // 让全局less 变量生效
-            },
-        },
-    },
-    server: {
-        port: 8080,
-        host: '0.0.0.0',
-        open: true,
-        https: false,
-        proxy: {
-            '/api/': {
-                // target: 'https://ybp.getui.com/api/',
-                // target: 'http://pop.cc.test.plat.ge.cn/api/',
-                changeOrigin: true,
-                rewrite: p => p.replace(/^\/api/, ''),
-            },
-        },
-    },
-    build: {
-        terserOptions: {
-            compress: {
-                drop_console: true,
-                drop_debugger: true,
             },
         },
     },
